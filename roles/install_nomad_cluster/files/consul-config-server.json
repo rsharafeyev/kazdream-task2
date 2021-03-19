@@ -1,0 +1,19 @@
+{
+    "bootstrap": true,
+    "server":true,
+    "log_level": "DEBUG",
+    "enable_syslog": true,
+    "enable_script_checks": true,
+    "datacenter": "dc1",
+    "addresses": {
+            "http": "0.0.0.0"
+    },
+    "bind_addr": "192.168.33.11",
+    "node_name": "consul-server",
+    "data_dir": "/var/consul-data",
+    "ui_dir": "/var/consul-ui",
+    "acl_datacenter": "dc1",
+    "acl_master_token": "123456789",
+    "acl_default_policy": "allow",
+    "encrypt": "pXoaLOJ816mO+da8y8zrsg=="
+}

@@ -1,0 +1,10 @@
+[Unit]
+Description=Consul Service
+Wants=network-online.target
+After=network-online.target
+[Service]
+ExecStart= /bin/sh -c "/usr/bin/consul agent -data-dir=/var/consul-data -bind=192.168.33.13 -join=192.168.33.11 -encrypt=pXoaLOJ816mO+da8y8zrsg=="
+Restart=always
+RestartSec=10
+[Install]
+WantedBy=multi-user.target

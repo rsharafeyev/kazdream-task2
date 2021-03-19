@@ -1,0 +1,4 @@
+---
+# defaults file for install_nomad_cluster
+ansible_user     : vagrant
+ansible_password : vagrant

@@ -1,0 +1,9 @@
+---
+- name: Copy nginx.nomad
+  copy: src=nginx.nomad dest=/tmp/nginx.nomad
+- name: Exec - nomad plan nginx.nomad
+  shell: nomad plan /tmp/nginx.nomad
+  ignore_errors: yes
+- name: Exec - nomad run nginx.nomad
+  shell: nomad run /tmp/nginx.nomad
+  ignore_errors: yes

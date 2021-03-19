@@ -1,0 +1,52 @@
+---
+- name: Install unzip
+  apt: name=unzip state=latest
+
+# Download binary files
+- name: Download nomad
+  get_url: url=https://releases.hashicorp.com/nomad/1.0.4/nomad_1.0.4_linux_amd64.zip dest=/tmp/nomad.zip validate_certs=no
+- name: Download consul
+  get_url: url=https://releases.hashicorp.com/consul/1.9.4/consul_1.9.4_linux_amd64.zip dest=/tmp/consul.zip validate_certs=no
+
+# Unzip binary files
+- name: Unarchive nomad.zip
+  unarchive: src=/tmp/nomad.zip dest=/usr/bin remote_src=yes
+- name: Unarchive consul.zip
+  unarchive: src=/tmp/consul.zip dest=/usr/bin remote_src=yes
+
+# Make executable binary
+- name: Nomad make executable
+  shell: chmod +x /usr/bin/nomad
+- name: Consul make executable
+  shell: chmod +x /usr/bin/consul
+
+# Create directories
+- name: Create directory /etc/nomad
+  file: path=/etc/nomad state=directory
+- name: Create directory /etc/consul/server
+  file: path=/etc/consul/server state=directory
+- name: Create directory /var/consul-data
+  file: path=/var/consul-data state=directory
+
+# Copy config files
+- name: Copy config file - nomad-conf-{{ inventory_hostname }}.hcl
+  copy: src=nomad-conf-{{ inventory_hostname }}.hcl dest=/etc/nomad/nomad-conf.hcl
+- name: Copy config file - consul-config-server.json
+  copy: src=consul-config-server.json dest=/etc/consul/server/config.json
+  when: "'servers' in {{ group_names }}"
+
+# Copy services files
+- name: Copy service file - nomad.service
+  copy: src=nomad.service dest=/etc/systemd/system/nomad.service
+- name: Copy service file - consul-service-{{ inventory_hostname }}.service
+  copy: src=consul-service-{{ inventory_hostname }}.service dest=/etc/systemd/system/consul.service
+  
+# Enable and start services
+- name: Enable and starting Nomad service
+  service: name=nomad state=started enabled=yes
+- name: Enable and starting Consul service
+  service: name=consul state=started enabled=yes
+
+# Sleep 20 sec for cluster up
+- name: Sleep for 20 seconds for nomad cluster is up
+  wait_for: timeout=20

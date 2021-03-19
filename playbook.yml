@@ -1,0 +1,10 @@
+---
+- name: Install nomad cluster & Deploy services
+  hosts: all
+  become: yes
+
+  roles:
+    - { role: install_docker, when: "'clients' in group_names" }
+    - install_nomad_cluster
+    - { role: deploy_hello_world, when: "'servers' in group_names" }
+    - { role: deploy_nginx_balancer, when: "'servers' in group_names" }

@@ -1,0 +1,11 @@
+---
+- name: Copy hello-world.nomad
+  copy: src=hello-world.nomad dest=/tmp/hello-world.nomad
+
+- name: Exec - nomad plan hello-world.nomad
+  shell: nomad plan /tmp/hello-world.nomad
+  ignore_errors: yes
+
+- name: Exec - nomad run hello-world.nomad
+  shell: nomad run /tmp/hello-world.nomad
+  ignore_errors: yes
